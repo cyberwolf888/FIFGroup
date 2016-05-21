@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -107,6 +108,20 @@ public class MainMenu extends AppCompatActivity {
                         R.id.email, R.id.mobile});
 
                 listView.setAdapter(adapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+                        Log.d("Cicked: ", "> " + position);
+
+                        HashMap<String, String> selected = studentList.get(position);
+
+                        Log.d("Selected :","> " + selected.get("id"));
+
+                        Intent intent = new Intent(getApplicationContext(), Penagihan.class);
+                        intent.putExtra("RowData", selected);
+                        startActivity(intent);
+                    }
+                });
             }
 
         }

@@ -15,5 +15,6 @@
     </string>
     <string name="title_activity_main_menu">Menu Utama</string>
     <string name="title_activity_about">About</string>
+    <string name="title_activity_penagihan">Penagihan</string>
     <!-- End Strings related to login -->
 </resources>
