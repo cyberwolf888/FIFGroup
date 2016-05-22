@@ -1,7 +1,11 @@
 package com.fifgroup.penagihan.fifgroup;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +22,8 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,10 +32,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MainMenu extends AppCompatActivity {
+import com.fifgroup.penagihan.fifgroup.Helper;
 
-    // URL to get contacts JSON
-    private static String url = "http://www.hendrawijaya.xyz/mobile/list.php";
+public class MainMenu extends AppCompatActivity {
 
     // JSON Node names
     private static final String TAG_STUDENTINFO = "studentsinfo";
@@ -42,20 +47,46 @@ public class MainMenu extends AppCompatActivity {
     private static final String TAG_PHONE_MOBILE = "mobile";
     private static final String TAG_PHONE_HOME = "home";
 
+    TextView ketText;
     ListView listView;
-
+    Helper helper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        helper = new Helper(MainMenu.this);
+        if(!helper.validateLogin()){
+            Intent intent = new Intent(getApplicationContext(), Login.class);
+            startActivity(intent);
+            finish();
+        }
         setContentView(R.layout.activity_main_menu);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        ketText = (TextView) findViewById(R.id.ketText);
         listView = (ListView) findViewById(R.id.mobile_list);
 
         //get request
-        new GetList().execute();
+        if(isNetworkAvailable()){
+            new GetList().execute();
+        }else{
+            ketText.setText("Tidak dapat terhubung dengan server!");
+            ketText.setVisibility(View.VISIBLE);
+            Toast.makeText(getApplicationContext(), "Koneksi internet tidak ditemukan!", Toast.LENGTH_LONG).show();
+        }
 
+    }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager cm = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        // if no network is available networkInfo will be null
+        // otherwise check if we are connected
+        if (networkInfo != null && networkInfo.isConnected()) {
+            return true;
+        }
+        return false;
     }
 
     //JSON handler
@@ -82,7 +113,7 @@ public class MainMenu extends AppCompatActivity {
             WebRequest webreq = new WebRequest();
 
             // Making a request to url and getting response
-            String jsonStr = webreq.sendGetRequest(url);
+            String jsonStr = webreq.sendGetRequest("list.php");
 
             Log.d("Response: ", "> " + jsonStr);
 
@@ -120,6 +151,7 @@ public class MainMenu extends AppCompatActivity {
                         Intent intent = new Intent(getApplicationContext(), Penagihan.class);
                         intent.putExtra("RowData", selected);
                         startActivity(intent);
+                        finish();
                     }
                 });
             }
@@ -196,10 +228,12 @@ public class MainMenu extends AppCompatActivity {
         if (id == R.id.action_about) {
             Intent intent = new Intent(getApplicationContext(), About.class);
             startActivity(intent);
+            finish();
         }
         if (id == R.id.action_home) {
             Intent intent = new Intent(getApplicationContext(), MainMenu.class);
             startActivity(intent);
+            finish();
         }
         if (id == R.id.action_logout) {
             new AlertDialog.Builder(this)
@@ -210,8 +244,11 @@ public class MainMenu extends AppCompatActivity {
                     {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            helper.logout();
+
                             Intent intent = new Intent(getApplicationContext(), Login.class);
                             startActivity(intent);
+                            finish();
                         }
 
                     })

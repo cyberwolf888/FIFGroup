@@ -17,6 +17,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class WebRequest {
 
     static String response = null;
+    static String server = "http://fifgroup.esy.es/mobile/";
     public final static int GET = 1;
     public final static int POST = 2;
 
@@ -28,7 +29,7 @@ public class WebRequest {
 
     public String sendGetRequest(String uri) {
         try {
-            URL url = new URL(uri);
+            URL url = new URL(server+uri);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
@@ -52,7 +53,7 @@ public class WebRequest {
         URL url;
         String response = "";
         try {
-            url = new URL(requestURL);
+            url = new URL(server+requestURL);
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(15000);
