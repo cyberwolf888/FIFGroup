@@ -45,7 +45,6 @@ import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
-import com.fifgroup.penagihan.fifgroup.Helper;
 /**
  * A login screen that offers login via email/password.
  */
@@ -293,7 +292,7 @@ public class Login extends AppCompatActivity {
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
-            Log.d("Response: ", "> " + jsonStr);
+            //Log.d("Response: ", "> " + jsonStr);
             if (success) {
                 //finish();
                 Intent intent = new Intent(getApplicationContext(), MainMenu.class);

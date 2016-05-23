@@ -3,13 +3,11 @@ package com.fifgroup.penagihan.fifgroup;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +16,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -32,20 +31,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.fifgroup.penagihan.fifgroup.Helper;
-
 public class MainMenu extends AppCompatActivity {
 
     // JSON Node names
-    private static final String TAG_STUDENTINFO = "studentsinfo";
-    private static final String TAG_ID = "id";
-    private static final String TAG_NAME = "name";
-    private static final String TAG_EMAIL = "email";
-    private static final String TAG_ADDRESS = "address";
-    private static final String TAG_GENDER = "gender";
-    private static final String TAG_PHONE = "phone";
-    private static final String TAG_PHONE_MOBILE = "mobile";
-    private static final String TAG_PHONE_HOME = "home";
+    private static final String TAG_LISTITEM = "databeban";
+    private static final String TAG_NO_KONTRAK = "no_kontrak";
+    private static final String TAG_NAMA = "nama";
+    private static final String TAG_ALAMAT = "tmpat_tagih";
+    private static final String TAG_PHONE = "tlp";
+    private static final String TAG_LABEL_STATUS = "label_status";
 
     TextView ketText;
     ListView listView;
@@ -93,7 +87,7 @@ public class MainMenu extends AppCompatActivity {
     private class GetList extends AsyncTask<Void, Void, Void> {
 
         // Hashmap for ListView
-        ArrayList<HashMap<String, String>> studentList;
+        ArrayList<HashMap<String, String>> itemList;
         ProgressDialog pDialog;
 
         @Override
@@ -111,13 +105,15 @@ public class MainMenu extends AppCompatActivity {
 
             // Creating service handler class instance
             WebRequest webreq = new WebRequest();
+            HashMap<String, String> data = new HashMap<String,String>();
+            data.put("id_kolektor",helper.getUserID());
 
             // Making a request to url and getting response
-            String jsonStr = webreq.sendGetRequest("list.php");
+            String jsonStr = webreq.sendPostRequest("databeban.php", data);
 
             Log.d("Response: ", "> " + jsonStr);
 
-            studentList = ParseJSON(jsonStr);
+            itemList = ParseJSON(jsonStr);
 
             return null;
         }
@@ -131,12 +127,29 @@ public class MainMenu extends AppCompatActivity {
             /**
              * Updating parsed JSON data into ListView
              * */
-            if(studentList != null){
+            if(itemList != null){
                 ListAdapter adapter = new SimpleAdapter(
-                        MainMenu.this, studentList,
-                        R.layout.list_item, new String[]{TAG_NAME, TAG_EMAIL,
-                        TAG_PHONE_MOBILE}, new int[]{R.id.name,
-                        R.id.email, R.id.mobile});
+                        MainMenu.this,
+                        itemList,
+                        R.layout.list_item,
+                        new String[]{TAG_NO_KONTRAK, TAG_NAMA, TAG_ALAMAT, TAG_PHONE, TAG_LABEL_STATUS},
+                        new int[]{R.id.no_kontrak, R.id.nama, R.id.alamat, R.id.phone, R.id.lbl_status}
+                ){
+                    @Override
+                    public View getView (int position, View convertView, ViewGroup parent) {
+                        View view = super.getView(position, convertView, parent);
+                        HashMap<String, String> data = itemList.get(position);
+                        TextView lbl_status = (TextView) view.findViewById(R.id.lbl_status);
+                        if(data.get(TAG_LABEL_STATUS).equals("Bayar")){
+                            lbl_status.setTextColor(Color.BLUE);
+                        }else if (data.get(TAG_LABEL_STATUS).equals("Lunas")){
+                            lbl_status.setTextColor(Color.GREEN);
+                        }else{
+                            lbl_status.setTextColor(Color.RED);
+                        }
+                        return view;
+                    }
+                };
 
                 listView.setAdapter(adapter);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -144,7 +157,7 @@ public class MainMenu extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> a, View v, int position, long id) {
                         Log.d("Cicked: ", "> " + position);
 
-                        HashMap<String, String> selected = studentList.get(position);
+                        HashMap<String, String> selected = itemList.get(position);
 
                         Log.d("Selected :","> " + selected.get("id"));
 
@@ -154,6 +167,9 @@ public class MainMenu extends AppCompatActivity {
                         finish();
                     }
                 });
+            }else{
+                ketText.setText("Tidak ditemukan data customer.");
+                ketText.setVisibility(View.VISIBLE);
             }
 
         }
@@ -169,34 +185,30 @@ public class MainMenu extends AppCompatActivity {
                 JSONObject jsonObj = new JSONObject(json);
 
                 // Getting JSON Array node
-                JSONArray students = jsonObj.getJSONArray(TAG_STUDENTINFO);
+                JSONArray listitem = jsonObj.getJSONArray(TAG_LISTITEM);
 
                 // looping through All Students
-                for (int i = 0; i < students.length(); i++) {
-                    JSONObject c = students.getJSONObject(i);
+                for (int i = 0; i < listitem.length(); i++) {
+                    JSONObject c = listitem.getJSONObject(i);
 
-                    String id = c.getString(TAG_ID);
-                    String name = c.getString(TAG_NAME);
-                    String email = c.getString(TAG_EMAIL);
-                    String address = c.getString(TAG_ADDRESS);
-                    String gender = c.getString(TAG_GENDER);
-
-                    // Phone node is JSON Object
-                    JSONObject phone = c.getJSONObject(TAG_PHONE);
-                    String mobile = phone.getString(TAG_PHONE_MOBILE);
-                    String home = phone.getString(TAG_PHONE_HOME);
+                    String no_kontrak = c.getString(TAG_NO_KONTRAK);
+                    String nama = c.getString(TAG_NAMA);
+                    String alamat = c.getString(TAG_ALAMAT);
+                    String phone = c.getString(TAG_PHONE);
+                    String lbl_status = c.getString(TAG_LABEL_STATUS);
 
                     // tmp hashmap for single student
-                    HashMap<String, String> student = new HashMap<String, String>();
+                    HashMap<String, String> dataList = new HashMap<String, String>();
 
                     // adding each child node to HashMap key => value
-                    student.put(TAG_ID, id);
-                    student.put(TAG_NAME, name);
-                    student.put(TAG_EMAIL, email);
-                    student.put(TAG_PHONE_MOBILE, mobile);
+                    dataList.put(TAG_NO_KONTRAK, no_kontrak);
+                    dataList.put(TAG_NAMA, nama);
+                    dataList.put(TAG_ALAMAT, alamat);
+                    dataList.put(TAG_PHONE, phone);
+                    dataList.put(TAG_LABEL_STATUS, lbl_status);
 
                     // adding student to students list
-                    studentList.add(student);
+                    studentList.add(dataList);
                 }
                 return studentList;
             } catch (JSONException e) {
@@ -208,7 +220,6 @@ public class MainMenu extends AppCompatActivity {
             return null;
         }
     }
-
 
     //toolbar menu
     public boolean onCreateOptionsMenu(Menu menu) {

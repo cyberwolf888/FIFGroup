@@ -4,9 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- Name Label -->
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/no_kontrak"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="2dip"
@@ -15,20 +14,28 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <!-- Email label -->
     <TextView
-        android:id="@+id/email"
+        android:id="@+id/nama"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="2dip"
-        android:text="Email" />
+        android:paddingBottom="2dip" />
 
-    <!-- Mobile number label -->
     <TextView
-        android:id="@+id/mobile"
+        android:id="@+id/phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="left"
-        android:text="Mobile: " />
+        android:gravity="left" />
+
+    <TextView
+        android:id="@+id/alamat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left" />
+
+    <TextView
+        android:id="@+id/lbl_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left" />
 
 </LinearLayout>
