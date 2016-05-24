@@ -1,5 +1,8 @@
 package com.fifgroup.penagihan.fifgroup;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -7,6 +10,7 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -41,9 +45,13 @@ public class MainMenu extends AppCompatActivity {
     private static final String TAG_PHONE = "tlp";
     private static final String TAG_LABEL_STATUS = "label_status";
 
+    private View mProgressView;
+    private View mContentLayoutView;
+
     TextView ketText;
     ListView listView;
     Helper helper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,11 +65,15 @@ public class MainMenu extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mContentLayoutView = findViewById(R.id.main_content_layout);
+        mProgressView = findViewById(R.id.main_progress);
+
         ketText = (TextView) findViewById(R.id.ketText);
         listView = (ListView) findViewById(R.id.mobile_list);
 
         //get request
         if(isNetworkAvailable()){
+            showProgress(true);
             new GetList().execute();
         }else{
             ketText.setText("Tidak dapat terhubung dengan server!");
@@ -83,6 +95,42 @@ public class MainMenu extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * Shows the progress UI and hides the login form.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            mContentLayoutView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mContentLayoutView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mContentLayoutView.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mContentLayoutView.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
+    }
+
     //JSON handler
     private class GetList extends AsyncTask<Void, Void, Void> {
 
@@ -94,10 +142,12 @@ public class MainMenu extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             // Showing progress dialog
+            /*
             pDialog = new ProgressDialog(MainMenu.this);
             pDialog.setMessage("Please wait...");
             pDialog.setCancelable(false);
             pDialog.show();
+            */
         }
 
         @Override
@@ -122,8 +172,10 @@ public class MainMenu extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             // Dismiss the progress dialog
+            /*
             if (pDialog.isShowing())
                 pDialog.dismiss();
+            */
             /**
              * Updating parsed JSON data into ListView
              * */
@@ -138,8 +190,15 @@ public class MainMenu extends AppCompatActivity {
                     @Override
                     public View getView (int position, View convertView, ViewGroup parent) {
                         View view = super.getView(position, convertView, parent);
+
                         HashMap<String, String> data = itemList.get(position);
+                        View list_row = (View) view.findViewById(R.id.list_lay);
                         TextView lbl_status = (TextView) view.findViewById(R.id.lbl_status);
+
+                        Log.d("Row: ", "> " + position%2);
+                        if(position%2==0){
+                            list_row.setBackgroundColor(Color.LTGRAY);
+                        }
                         if(data.get(TAG_LABEL_STATUS).equals("Bayar")){
                             lbl_status.setTextColor(Color.BLUE);
                         }else if (data.get(TAG_LABEL_STATUS).equals("Lunas")){
@@ -172,6 +231,7 @@ public class MainMenu extends AppCompatActivity {
                 ketText.setVisibility(View.VISIBLE);
             }
 
+            showProgress(false);
         }
 
     }

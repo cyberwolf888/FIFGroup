@@ -3,14 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.fifgroup.penagihan.fifgroup.MainMenu">
 
-    <item android:id="@+id/action_about"
-        android:icon="@android:drawable/ic_dialog_info"
-        android:title="About"
-        app:showAsAction="ifRoom"/>
-
     <item
         android:id="@+id/action_home"
+        android:icon="@android:drawable/ic_dialog_dialer"
         android:title="Dashboard"
+        app:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/action_about"
+        android:title="About"
         app:showAsAction="never"/>
 
     <item android:id="@+id/action_logout"
