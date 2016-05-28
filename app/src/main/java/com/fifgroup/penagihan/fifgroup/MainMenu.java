@@ -44,6 +44,10 @@ public class MainMenu extends AppCompatActivity {
     private static final String TAG_ALAMAT = "tmpat_tagih";
     private static final String TAG_PHONE = "tlp";
     private static final String TAG_LABEL_STATUS = "label_status";
+    private static final String TAG_STATUS = "sts_laporan";
+    private static final String TAG_HUTANG_POKOK = "pokok_hutang";
+    private static final String TAG_TELAH_BAYAR = "telah_bayar";
+    private static final String TAG_ANGSURAN = "angsuran";
 
     private View mProgressView;
     private View mContentLayoutView;
@@ -195,10 +199,6 @@ public class MainMenu extends AppCompatActivity {
                         View list_row = (View) view.findViewById(R.id.list_lay);
                         TextView lbl_status = (TextView) view.findViewById(R.id.lbl_status);
 
-                        Log.d("Row: ", "> " + position%2);
-                        if(position%2==0){
-                            list_row.setBackgroundColor(Color.LTGRAY);
-                        }
                         if(data.get(TAG_LABEL_STATUS).equals("Bayar")){
                             lbl_status.setTextColor(Color.BLUE);
                         }else if (data.get(TAG_LABEL_STATUS).equals("Lunas")){
@@ -214,16 +214,23 @@ public class MainMenu extends AppCompatActivity {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-                        Log.d("Cicked: ", "> " + position);
+                        //Log.d("Cicked: ", "> " + position);
 
                         HashMap<String, String> selected = itemList.get(position);
 
-                        Log.d("Selected :","> " + selected.get("id"));
+                        //Log.d("Selected :","> " + selected);
+                        if(selected.get(TAG_LABEL_STATUS).equals("Bayar") || selected.get(TAG_LABEL_STATUS).equals("Lunas")){
+                            Intent intent = new Intent(getApplicationContext(), Detail.class);
+                            intent.putExtra("RowData", selected);
+                            startActivity(intent);
+                            finish();
+                        }else{
+                            Intent intent = new Intent(getApplicationContext(), Penagihan.class);
+                            intent.putExtra("RowData", selected);
+                            startActivity(intent);
+                            finish();
+                        }
 
-                        Intent intent = new Intent(getApplicationContext(), Penagihan.class);
-                        intent.putExtra("RowData", selected);
-                        startActivity(intent);
-                        finish();
                     }
                 });
             }else{
@@ -240,7 +247,7 @@ public class MainMenu extends AppCompatActivity {
         if (json != null) {
             try {
                 // Hashmap for ListView
-                ArrayList<HashMap<String, String>> studentList = new ArrayList<HashMap<String, String>>();
+                ArrayList<HashMap<String, String>> itemList = new ArrayList<HashMap<String, String>>();
 
                 JSONObject jsonObj = new JSONObject(json);
 
@@ -256,6 +263,10 @@ public class MainMenu extends AppCompatActivity {
                     String alamat = c.getString(TAG_ALAMAT);
                     String phone = c.getString(TAG_PHONE);
                     String lbl_status = c.getString(TAG_LABEL_STATUS);
+                    String status = c.getString(TAG_STATUS);
+                    String pokok_hutang = c.getString(TAG_HUTANG_POKOK);
+                    String telah_bayar = c.getString(TAG_TELAH_BAYAR);
+                    String angsuran = c.getString(TAG_ANGSURAN);
 
                     // tmp hashmap for single student
                     HashMap<String, String> dataList = new HashMap<String, String>();
@@ -266,11 +277,15 @@ public class MainMenu extends AppCompatActivity {
                     dataList.put(TAG_ALAMAT, alamat);
                     dataList.put(TAG_PHONE, phone);
                     dataList.put(TAG_LABEL_STATUS, lbl_status);
+                    dataList.put(TAG_STATUS, status);
+                    dataList.put(TAG_HUTANG_POKOK, pokok_hutang);
+                    dataList.put(TAG_TELAH_BAYAR, telah_bayar);
+                    dataList.put(TAG_ANGSURAN, angsuran);
 
                     // adding student to students list
-                    studentList.add(dataList);
+                    itemList.add(dataList);
                 }
-                return studentList;
+                return itemList;
             } catch (JSONException e) {
                 e.printStackTrace();
                 return null;

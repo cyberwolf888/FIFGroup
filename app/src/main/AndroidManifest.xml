@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Splash"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,6 +44,10 @@
         <activity
             android:name=".Penagihan"
             android:label="@string/title_activity_penagihan"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Detail"
+            android:label="@string/title_activity_detail"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
