@@ -12,8 +12,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -27,28 +25,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
 
 public class Penagihan extends AppCompatActivity {
 
     private TagihTask mTagihTask = null;
-
-    // JSON Node names
-    private static final String TAG_LISTITEM = "databeban";
-    private static final String TAG_NO_KONTRAK = "no_kontrak";
-    private static final String TAG_NAMA = "nama";
-    private static final String TAG_ALAMAT = "tmpat_tagih";
-    private static final String TAG_PHONE = "tlp";
-    private static final String TAG_LABEL_STATUS = "label_status";
-    private static final String TAG_STATUS = "sts_laporan";
-    private static final String TAG_HUTANG_POKOK = "pokok_hutang";
-    private static final String TAG_TELAH_BAYAR = "telah_bayar";
-    private static final String TAG_ANGSURAN = "angsuran";
 
     TextView txtNoKontrak;
     TextView txtNama;
@@ -84,7 +67,7 @@ public class Penagihan extends AppCompatActivity {
 
         Intent intent = getIntent();
         RowData = (HashMap<String, String>)intent.getSerializableExtra("RowData");
-        Log.d("RowData :","> " + RowData);
+        //Log.d("RowData :","> " + RowData);
 
         txtNoKontrak = (TextView) findViewById(R.id.txtNoKontrak);
         txtNama = (TextView) findViewById(R.id.txtNama);
@@ -97,28 +80,18 @@ public class Penagihan extends AppCompatActivity {
         txt_bayar = (EditText) findViewById(R.id.txt_bayar);
         txt_angsuran = (EditText) findViewById(R.id.txt_angsuran);
 
-        DecimalFormat kursIndonesia = (DecimalFormat) DecimalFormat.getCurrencyInstance();
-        DecimalFormatSymbols formatRp = new DecimalFormatSymbols();
+        txtNoKontrak.setText(RowData.get(helper.TAG_NO_KONTRAK));
+        txtNama.setText(RowData.get(helper.TAG_NAMA));
+        txtAlamat.setText(RowData.get(helper.TAG_ALAMAT));
+        txtPhone.setText(RowData.get(helper.TAG_PHONE));
+        txtHutangPokok.setText(helper.formatNumber(Integer.valueOf(RowData.get(helper.TAG_HUTANG_POKOK))));
+        txtTelahBayar.setText(helper.formatNumber(Integer.valueOf(RowData.get(helper.TAG_TELAH_BAYAR))));
+        txtAngsuran.setText(helper.formatNumber(Integer.valueOf(RowData.get(helper.TAG_ANGSURAN))));
+        txtStatus.setText(RowData.get(helper.TAG_LABEL_STATUS));
 
-        formatRp.setCurrencySymbol("Rp. ");
-        formatRp.setMonetaryDecimalSeparator(',');
-        formatRp.setGroupingSeparator('.');
-
-        kursIndonesia.setDecimalFormatSymbols(formatRp);
-        kursIndonesia.setMaximumFractionDigits(0);
-
-        txtNoKontrak.setText(RowData.get(TAG_NO_KONTRAK));
-        txtNama.setText(RowData.get(TAG_NAMA));
-        txtAlamat.setText(RowData.get(TAG_ALAMAT));
-        txtPhone.setText(RowData.get(TAG_PHONE));
-        txtHutangPokok.setText(kursIndonesia.format(Integer.valueOf(RowData.get(TAG_HUTANG_POKOK))));
-        txtTelahBayar.setText(kursIndonesia.format(Integer.valueOf(RowData.get(TAG_TELAH_BAYAR))));
-        txtAngsuran.setText(kursIndonesia.format(Integer.valueOf(RowData.get(TAG_ANGSURAN))));
-        txtStatus.setText(RowData.get(TAG_LABEL_STATUS));
-
-        if(RowData.get(TAG_STATUS).equals("1")){
+        if(RowData.get(helper.TAG_STATUS).equals("1")){
             txtStatus.setTextColor(Color.BLUE);
-        }else if((RowData.get(TAG_STATUS).equals("2"))){
+        }else if((RowData.get(helper.TAG_STATUS).equals("2"))){
             txtStatus.setTextColor(Color.GREEN);
         }else{
             txtStatus.setTextColor(Color.RED);
@@ -238,7 +211,7 @@ public class Penagihan extends AppCompatActivity {
             WebRequest webreq = new WebRequest();
             HashMap<String, String> data = new HashMap<String,String>();
             data.put("id_kolektor",helper.getUserID());
-            data.put("no_kontrak",RowData.get(TAG_NO_KONTRAK));
+            data.put("no_kontrak",RowData.get(helper.TAG_NO_KONTRAK));
             data.put("bayar",mBayar);
             data.put("angsuran",mAngsuran);
 
@@ -251,7 +224,7 @@ public class Penagihan extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             mTagihTask = null;
             showProgress(false);
-            Log.d("Response: ", "> " + jsonStr);
+            //Log.d("Response: ", "> " + jsonStr);
             if(jsonStr != null && !jsonStr.isEmpty()){
                 try{
                     JSONObject jObj = new JSONObject(jsonStr);

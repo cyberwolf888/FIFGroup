@@ -37,18 +37,6 @@ import java.util.HashMap;
 
 public class MainMenu extends AppCompatActivity {
 
-    // JSON Node names
-    private static final String TAG_LISTITEM = "databeban";
-    private static final String TAG_NO_KONTRAK = "no_kontrak";
-    private static final String TAG_NAMA = "nama";
-    private static final String TAG_ALAMAT = "tmpat_tagih";
-    private static final String TAG_PHONE = "tlp";
-    private static final String TAG_LABEL_STATUS = "label_status";
-    private static final String TAG_STATUS = "sts_laporan";
-    private static final String TAG_HUTANG_POKOK = "pokok_hutang";
-    private static final String TAG_TELAH_BAYAR = "telah_bayar";
-    private static final String TAG_ANGSURAN = "angsuran";
-
     private View mProgressView;
     private View mContentLayoutView;
 
@@ -165,7 +153,7 @@ public class MainMenu extends AppCompatActivity {
             // Making a request to url and getting response
             String jsonStr = webreq.sendPostRequest("databeban.php", data);
 
-            Log.d("Response: ", "> " + jsonStr);
+            //Log.d("Response: ", "> " + jsonStr);
 
             itemList = ParseJSON(jsonStr);
 
@@ -188,7 +176,7 @@ public class MainMenu extends AppCompatActivity {
                         MainMenu.this,
                         itemList,
                         R.layout.list_item,
-                        new String[]{TAG_NO_KONTRAK, TAG_NAMA, TAG_ALAMAT, TAG_PHONE, TAG_LABEL_STATUS},
+                        new String[]{helper.TAG_NO_KONTRAK, helper.TAG_NAMA, helper.TAG_ALAMAT, helper.TAG_PHONE, helper.TAG_LABEL_STATUS},
                         new int[]{R.id.no_kontrak, R.id.nama, R.id.alamat, R.id.phone, R.id.lbl_status}
                 ){
                     @Override
@@ -199,9 +187,9 @@ public class MainMenu extends AppCompatActivity {
                         View list_row = (View) view.findViewById(R.id.list_lay);
                         TextView lbl_status = (TextView) view.findViewById(R.id.lbl_status);
 
-                        if(data.get(TAG_LABEL_STATUS).equals("Bayar")){
+                        if(data.get(helper.TAG_LABEL_STATUS).equals("Bayar")){
                             lbl_status.setTextColor(Color.BLUE);
-                        }else if (data.get(TAG_LABEL_STATUS).equals("Lunas")){
+                        }else if (data.get(helper.TAG_LABEL_STATUS).equals("Lunas")){
                             lbl_status.setTextColor(Color.GREEN);
                         }else{
                             lbl_status.setTextColor(Color.RED);
@@ -219,7 +207,7 @@ public class MainMenu extends AppCompatActivity {
                         HashMap<String, String> selected = itemList.get(position);
 
                         //Log.d("Selected :","> " + selected);
-                        if(selected.get(TAG_LABEL_STATUS).equals("Bayar") || selected.get(TAG_LABEL_STATUS).equals("Lunas")){
+                        if(selected.get(helper.TAG_LABEL_STATUS).equals("Bayar") || selected.get(helper.TAG_LABEL_STATUS).equals("Lunas")){
                             Intent intent = new Intent(getApplicationContext(), Detail.class);
                             intent.putExtra("RowData", selected);
                             startActivity(intent);
@@ -252,35 +240,35 @@ public class MainMenu extends AppCompatActivity {
                 JSONObject jsonObj = new JSONObject(json);
 
                 // Getting JSON Array node
-                JSONArray listitem = jsonObj.getJSONArray(TAG_LISTITEM);
+                JSONArray listitem = jsonObj.getJSONArray(helper.TAG_LISTITEM);
 
                 // looping through All Students
                 for (int i = 0; i < listitem.length(); i++) {
                     JSONObject c = listitem.getJSONObject(i);
 
-                    String no_kontrak = c.getString(TAG_NO_KONTRAK);
-                    String nama = c.getString(TAG_NAMA);
-                    String alamat = c.getString(TAG_ALAMAT);
-                    String phone = c.getString(TAG_PHONE);
-                    String lbl_status = c.getString(TAG_LABEL_STATUS);
-                    String status = c.getString(TAG_STATUS);
-                    String pokok_hutang = c.getString(TAG_HUTANG_POKOK);
-                    String telah_bayar = c.getString(TAG_TELAH_BAYAR);
-                    String angsuran = c.getString(TAG_ANGSURAN);
+                    String no_kontrak = c.getString(helper.TAG_NO_KONTRAK);
+                    String nama = c.getString(helper.TAG_NAMA);
+                    String alamat = c.getString(helper.TAG_ALAMAT);
+                    String phone = c.getString(helper.TAG_PHONE);
+                    String lbl_status = c.getString(helper.TAG_LABEL_STATUS);
+                    String status = c.getString(helper.TAG_STATUS);
+                    String pokok_hutang = c.getString(helper.TAG_HUTANG_POKOK);
+                    String telah_bayar = c.getString(helper.TAG_TELAH_BAYAR);
+                    String angsuran = c.getString(helper.TAG_ANGSURAN);
 
                     // tmp hashmap for single student
                     HashMap<String, String> dataList = new HashMap<String, String>();
 
                     // adding each child node to HashMap key => value
-                    dataList.put(TAG_NO_KONTRAK, no_kontrak);
-                    dataList.put(TAG_NAMA, nama);
-                    dataList.put(TAG_ALAMAT, alamat);
-                    dataList.put(TAG_PHONE, phone);
-                    dataList.put(TAG_LABEL_STATUS, lbl_status);
-                    dataList.put(TAG_STATUS, status);
-                    dataList.put(TAG_HUTANG_POKOK, pokok_hutang);
-                    dataList.put(TAG_TELAH_BAYAR, telah_bayar);
-                    dataList.put(TAG_ANGSURAN, angsuran);
+                    dataList.put(helper.TAG_NO_KONTRAK, no_kontrak);
+                    dataList.put(helper.TAG_NAMA, nama);
+                    dataList.put(helper.TAG_ALAMAT, alamat);
+                    dataList.put(helper.TAG_PHONE, phone);
+                    dataList.put(helper.TAG_LABEL_STATUS, lbl_status);
+                    dataList.put(helper.TAG_STATUS, status);
+                    dataList.put(helper.TAG_HUTANG_POKOK, pokok_hutang);
+                    dataList.put(helper.TAG_TELAH_BAYAR, telah_bayar);
+                    dataList.put(helper.TAG_ANGSURAN, angsuran);
 
                     // adding student to students list
                     itemList.add(dataList);

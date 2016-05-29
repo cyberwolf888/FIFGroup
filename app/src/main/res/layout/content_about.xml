@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    android:id="@+id/about_lay"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,6 +12,58 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.fifgroup.penagihan.fifgroup.About"
-    tools:showIn="@layout/activity_about">
+    tools:showIn="@layout/activity_about"
+    android:gravity="center"
+    android:orientation="vertical">
 
-</RelativeLayout>
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="match_parent"
+        android:layout_height="128dp"
+        android:src="@drawable/app_logo2"
+        android:scaleType="centerInside"
+        android:adjustViewBounds="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_gravity="center_vertical" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:textSize="14dp"
+        android:textColor="@color/colorPrimary"
+        android:gravity="center_horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="30dp"
+        android:text="I Made Dwi Kristina" />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:textSize="14dp"
+        android:textColor="@color/colorPrimary"
+        android:gravity="center_horizontal"
+        android:layout_alignParentBottom="true"
+        android:text="120030089" />
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:textSize="14dp"
+        android:textColor="@color/colorPrimary"
+        android:gravity="center_horizontal"
+        android:layout_alignParentBottom="true"
+        android:text="Sistem Informasi" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:textSize="14dp"
+        android:textColor="#95a5a6"
+        android:gravity="center_horizontal"
+        android:layout_alignParentBottom="true"
+        android:text="Versi 1.1" />
+
+</LinearLayout>
