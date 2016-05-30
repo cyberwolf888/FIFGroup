@@ -18,4 +18,8 @@
     <string name="title_activity_penagihan">Penagihan</string>
     <string name="title_activity_detail">Detail</string>
     <!-- End Strings related to login -->
+
+    <string name="nama">Dwi Kristina Darmayanthi</string>
+    <string name="nim">12003000</string>
+    <string name="jurusan">Sistem Informasi</string>
 </resources>

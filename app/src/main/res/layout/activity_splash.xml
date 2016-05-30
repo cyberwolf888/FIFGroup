@@ -28,6 +28,6 @@
         android:gravity="center_horizontal"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="30dp"
-        android:text="I Made Dwi Kristina" />
+        android:text="@string/nama" />
 
 </LinearLayout>
