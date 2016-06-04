@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.HashMap;
 
@@ -40,6 +41,8 @@ public class Detail extends AppCompatActivity {
     TextView dtNomerHp;
     TextView dtHutang;
     TextView dtTelahBayar;
+    TextView dtJatuhTempo;
+    TextView dtDenda;
     TextView dtStatus;
 
     Helper helper;
@@ -68,6 +71,8 @@ public class Detail extends AppCompatActivity {
         dtNomerHp = (TextView) findViewById(R.id.dtNomerHp);
         dtHutang = (TextView) findViewById(R.id.dtHutang);
         dtTelahBayar = (TextView) findViewById(R.id.dtTelahBayar);
+        dtJatuhTempo = (TextView) findViewById(R.id.dtJatuhTempo);
+        dtDenda = (TextView) findViewById(R.id.dtDenda);
         dtStatus = (TextView) findViewById(R.id.dtStatus);
 
         mDetailView = findViewById(R.id.detail_view);
@@ -145,7 +150,8 @@ public class Detail extends AppCompatActivity {
             WebRequest webreq = new WebRequest();
             HashMap<String, String> data = new HashMap<String,String>();
             data.put("id_kolektor",helper.getUserID());
-            data.put("no_kontrak",RowData.get(helper.TAG_NO_KONTRAK));
+            data.put("id_cst",RowData.get(helper.TAG_ID_CST));
+            //data.put("no_kontrak",RowData.get(helper.TAG_NO_KONTRAK));
 
             jsonStr = webreq.sendPostRequest("detail.php", data);
 
@@ -160,7 +166,7 @@ public class Detail extends AppCompatActivity {
             if(jsonStr != null && !jsonStr.isEmpty()){
                 try{
                     JSONObject jObj = new JSONObject(jsonStr);
-                    //Log.d("jObj: ", "> " + jObj);
+                    Log.d("jObj: ", "> " + jObj);
 
                     dtNoKontrak.setText(jObj.getString(helper.TAG_NO_KONTRAK));
                     dtNama.setText(jObj.getString(helper.TAG_NAMA));
@@ -168,6 +174,8 @@ public class Detail extends AppCompatActivity {
                     dtNomerHp.setText(jObj.getString(helper.TAG_PHONE));
                     dtHutang.setText(helper.formatNumber(Integer.valueOf(jObj.getString(helper.TAG_HUTANG_POKOK))));
                     dtTelahBayar.setText(helper.formatNumber(Integer.valueOf(jObj.getString(helper.TAG_TELAH_BAYAR))));
+                    dtJatuhTempo.setText(jObj.getString(helper.TAG_JATUH_TEMPO));
+                    dtDenda.setText(helper.formatNumber(Integer.valueOf(jObj.getString(helper.TAG_DENDA))));
                     dtStatus.setText(jObj.getString(helper.TAG_LABEL_STATUS));
 
                     if(jObj.get(helper.TAG_STATUS).equals("1")){

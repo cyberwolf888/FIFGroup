@@ -141,6 +141,24 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/static_jatuh_tempo"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="2dip"
+                android:paddingTop="6dip"
+                android:text="Jatuh Tempo"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/txtJatuhTempo"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dip"
+                android:paddingTop="0dip"
+                android:text="06/06/2016"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/static_agsuran"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -155,6 +173,24 @@
                 android:paddingBottom="10dip"
                 android:paddingTop="0dip"
                 android:text="Rp. 200.000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/static_denda"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="2dip"
+                android:paddingTop="6dip"
+                android:text="Denda"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/txtDenda"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dip"
+                android:paddingTop="0dip"
+                android:text="Rp. 25.000"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 

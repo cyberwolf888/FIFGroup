@@ -20,6 +20,7 @@ public class Helper extends AppCompatActivity {
 
     // JSON Node names
     public static final String TAG_LISTITEM = "databeban";
+    public static final String TAG_ID_CST = "id_cst";
     public static final String TAG_NO_KONTRAK = "no_kontrak";
     public static final String TAG_NAMA = "nama";
     public static final String TAG_ALAMAT = "tmpat_tagih";
@@ -29,6 +30,8 @@ public class Helper extends AppCompatActivity {
     public static final String TAG_HUTANG_POKOK = "pokok_hutang";
     public static final String TAG_TELAH_BAYAR = "telah_bayar";
     public static final String TAG_ANGSURAN = "angsuran";
+    public static final String TAG_JATUH_TEMPO = "tgl_jth_tempo";
+    public static final String TAG_DENDA = "denda";
 
     SharedPreferences sharedpreferences;
     public Helper(Context mContext){

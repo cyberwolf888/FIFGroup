@@ -139,6 +139,40 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="2dip"
                 android:paddingTop="6dip"
+                android:text="Jatuh Tempo"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/dtJatuhTempo"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dip"
+                android:paddingTop="0dip"
+                android:text="06/06/2016"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="2dip"
+                android:paddingTop="6dip"
+                android:text="Denda"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/dtDenda"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dip"
+                android:paddingTop="0dip"
+                android:text="Rp. 25.000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="2dip"
+                android:paddingTop="6dip"
                 android:text="Status Pembayaran"
                 android:textSize="14sp" />
             <TextView

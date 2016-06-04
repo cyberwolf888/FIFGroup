@@ -27,6 +27,8 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 public class Penagihan extends AppCompatActivity {
@@ -39,8 +41,10 @@ public class Penagihan extends AppCompatActivity {
     TextView txtPhone;
     TextView txtHutangPokok;
     TextView txtTelahBayar;
+    TextView txtJatuhTempo;
     TextView txtAngsuran;
     TextView txtStatus;
+    TextView txtDenda;
     EditText txt_bayar;
     EditText txt_angsuran;
 
@@ -67,7 +71,7 @@ public class Penagihan extends AppCompatActivity {
 
         Intent intent = getIntent();
         RowData = (HashMap<String, String>)intent.getSerializableExtra("RowData");
-        //Log.d("RowData :","> " + RowData);
+        Log.d("RowData :","> " + RowData);
 
         txtNoKontrak = (TextView) findViewById(R.id.txtNoKontrak);
         txtNama = (TextView) findViewById(R.id.txtNama);
@@ -75,8 +79,10 @@ public class Penagihan extends AppCompatActivity {
         txtPhone = (TextView) findViewById(R.id.txtNomerHp);
         txtHutangPokok = (TextView) findViewById(R.id.txtHutang);
         txtTelahBayar = (TextView) findViewById(R.id.txtTelahBayar);
+        txtJatuhTempo = (TextView) findViewById(R.id.txtJatuhTempo);
         txtAngsuran = (TextView) findViewById(R.id.txtAngsuran);
         txtStatus = (TextView) findViewById(R.id.txtStatus);
+        txtDenda = (TextView) findViewById(R.id.txtDenda);
         txt_bayar = (EditText) findViewById(R.id.txt_bayar);
         txt_angsuran = (EditText) findViewById(R.id.txt_angsuran);
 
@@ -86,7 +92,9 @@ public class Penagihan extends AppCompatActivity {
         txtPhone.setText(RowData.get(helper.TAG_PHONE));
         txtHutangPokok.setText(helper.formatNumber(Integer.valueOf(RowData.get(helper.TAG_HUTANG_POKOK))));
         txtTelahBayar.setText(helper.formatNumber(Integer.valueOf(RowData.get(helper.TAG_TELAH_BAYAR))));
+        txtJatuhTempo.setText(RowData.get(helper.TAG_JATUH_TEMPO));
         txtAngsuran.setText(helper.formatNumber(Integer.valueOf(RowData.get(helper.TAG_ANGSURAN))));
+        txtDenda.setText(helper.formatNumber(getDenda(RowData.get(helper.TAG_JATUH_TEMPO))));
         txtStatus.setText(RowData.get(helper.TAG_LABEL_STATUS));
 
         if(RowData.get(helper.TAG_STATUS).equals("1")){
@@ -157,6 +165,21 @@ public class Penagihan extends AppCompatActivity {
         }
     }
 
+    private int getDenda(String jatuh_tempo){
+        int denda = 0;
+        try{
+            SimpleDateFormat patterm = new SimpleDateFormat("MM/dd/yyyy");
+            Date strDate = patterm.parse(jatuh_tempo);
+            Date currentDate = new Date(); //patterm.parse("07/05/2016");
+            if (currentDate.after(strDate)) {
+                denda = 25000;
+            }
+        }catch (Exception e){
+
+        }
+        return denda;
+    }
+
     private void tagih(){
         txt_bayar.setError(null);
         txt_angsuran.setError(null);
@@ -211,10 +234,12 @@ public class Penagihan extends AppCompatActivity {
             WebRequest webreq = new WebRequest();
             HashMap<String, String> data = new HashMap<String,String>();
             data.put("id_kolektor",helper.getUserID());
-            data.put("no_kontrak",RowData.get(helper.TAG_NO_KONTRAK));
+            //data.put("no_kontrak",RowData.get(helper.TAG_NO_KONTRAK));
+            data.put("id_cst",RowData.get(helper.TAG_ID_CST));
             data.put("bayar",mBayar);
             data.put("angsuran",mAngsuran);
-
+            data.put("denda",Integer.toString(getDenda(RowData.get(helper.TAG_JATUH_TEMPO))));
+            Log.d("Data: ", "> " + data);
             jsonStr = webreq.sendPostRequest("penagihan.php", data);
 
             return null;
@@ -224,7 +249,7 @@ public class Penagihan extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             mTagihTask = null;
             showProgress(false);
-            //Log.d("Response: ", "> " + jsonStr);
+            Log.d("Response: ", "> " + jsonStr);
             if(jsonStr != null && !jsonStr.isEmpty()){
                 try{
                     JSONObject jObj = new JSONObject(jsonStr);

@@ -246,6 +246,7 @@ public class MainMenu extends AppCompatActivity {
                 for (int i = 0; i < listitem.length(); i++) {
                     JSONObject c = listitem.getJSONObject(i);
 
+                    String id_cst = c.getString(helper.TAG_ID_CST);
                     String no_kontrak = c.getString(helper.TAG_NO_KONTRAK);
                     String nama = c.getString(helper.TAG_NAMA);
                     String alamat = c.getString(helper.TAG_ALAMAT);
@@ -255,11 +256,13 @@ public class MainMenu extends AppCompatActivity {
                     String pokok_hutang = c.getString(helper.TAG_HUTANG_POKOK);
                     String telah_bayar = c.getString(helper.TAG_TELAH_BAYAR);
                     String angsuran = c.getString(helper.TAG_ANGSURAN);
+                    String jatuh_tempo = c.getString(helper.TAG_JATUH_TEMPO);
 
                     // tmp hashmap for single student
                     HashMap<String, String> dataList = new HashMap<String, String>();
 
                     // adding each child node to HashMap key => value
+                    dataList.put(helper.TAG_ID_CST, id_cst);
                     dataList.put(helper.TAG_NO_KONTRAK, no_kontrak);
                     dataList.put(helper.TAG_NAMA, nama);
                     dataList.put(helper.TAG_ALAMAT, alamat);
@@ -269,6 +272,7 @@ public class MainMenu extends AppCompatActivity {
                     dataList.put(helper.TAG_HUTANG_POKOK, pokok_hutang);
                     dataList.put(helper.TAG_TELAH_BAYAR, telah_bayar);
                     dataList.put(helper.TAG_ANGSURAN, angsuran);
+                    dataList.put(helper.TAG_JATUH_TEMPO, jatuh_tempo);
 
                     // adding student to students list
                     itemList.add(dataList);
