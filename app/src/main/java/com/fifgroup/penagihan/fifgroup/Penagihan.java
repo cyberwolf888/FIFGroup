@@ -94,7 +94,7 @@ public class Penagihan extends AppCompatActivity {
         txtTelahBayar.setText(helper.formatNumber(Integer.valueOf(RowData.get(helper.TAG_TELAH_BAYAR))));
         txtJatuhTempo.setText(RowData.get(helper.TAG_JATUH_TEMPO));
         txtAngsuran.setText(helper.formatNumber(Integer.valueOf(RowData.get(helper.TAG_ANGSURAN))));
-        txtDenda.setText(helper.formatNumber(getDenda(RowData.get(helper.TAG_JATUH_TEMPO))));
+        txtDenda.setText(helper.formatNumber(getDenda(RowData.get(helper.TAG_TELAH_BAYAR), RowData.get(helper.TAG_HUTANG_POKOK), RowData.get(helper.TAG_JATUH_TEMPO))));
         txtStatus.setText(RowData.get(helper.TAG_LABEL_STATUS));
 
         if(RowData.get(helper.TAG_STATUS).equals("1")){
@@ -165,14 +165,18 @@ public class Penagihan extends AppCompatActivity {
         }
     }
 
-    private int getDenda(String jatuh_tempo){
+    private int getDenda(String telah_bayar, String hutang_pokok, String jatuh_tempo){
         int denda = 0;
         try{
+            int sisa_hutang = Integer.valueOf(hutang_pokok) - Integer.valueOf(telah_bayar);
+            Log.d("Sisa Hutang :","> "+ sisa_hutang);
+            Log.d("Telah Bayar :","> "+ telah_bayar);
+            Log.d("Hutang Pokok :","> "+ hutang_pokok);
             SimpleDateFormat patterm = new SimpleDateFormat("MM/dd/yyyy");
             Date strDate = patterm.parse(jatuh_tempo);
             Date currentDate = new Date(); //patterm.parse("07/05/2016");
             if (currentDate.after(strDate)) {
-                denda = 25000;
+                denda = sisa_hutang * 5/1000;
             }
         }catch (Exception e){
 
@@ -238,7 +242,7 @@ public class Penagihan extends AppCompatActivity {
             data.put("id_cst",RowData.get(helper.TAG_ID_CST));
             data.put("bayar",mBayar);
             data.put("angsuran",mAngsuran);
-            data.put("denda",Integer.toString(getDenda(RowData.get(helper.TAG_JATUH_TEMPO))));
+            data.put("denda",Integer.toString(getDenda(RowData.get(helper.TAG_TELAH_BAYAR), RowData.get(helper.TAG_HUTANG_POKOK), RowData.get(helper.TAG_JATUH_TEMPO))));
             Log.d("Data: ", "> " + data);
             jsonStr = webreq.sendPostRequest("penagihan.php", data);
 
