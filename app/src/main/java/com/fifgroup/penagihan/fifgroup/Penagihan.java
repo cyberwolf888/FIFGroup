@@ -190,12 +190,20 @@ public class Penagihan extends AppCompatActivity {
 
         String bayar = txt_bayar.getText().toString();
         String angsuran = txt_angsuran.getText().toString();
+        int denda = getDenda(RowData.get(helper.TAG_TELAH_BAYAR), RowData.get(helper.TAG_HUTANG_POKOK), RowData.get(helper.TAG_JATUH_TEMPO));
+        int m_angsuran = Integer.valueOf(RowData.get(helper.TAG_ANGSURAN));
+        int minimal_bayar = denda+m_angsuran;
+        Log.d("Response: ", "> " + minimal_bayar);
 
         boolean cancel = false;
         View focusView = null;
 
         if (!isBayarValid(bayar)) {
             txt_bayar.setError("Karakter terlalu pendek!");
+            focusView = txt_bayar;
+            cancel = true;
+        }else if (minimal_bayar>Integer.parseInt(bayar)){
+            txt_bayar.setError("Pembayaran minimal "+String.valueOf(minimal_bayar));
             focusView = txt_bayar;
             cancel = true;
         } else if(TextUtils.isEmpty(angsuran)){
