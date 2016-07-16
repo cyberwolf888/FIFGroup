@@ -202,8 +202,8 @@ public class Penagihan extends AppCompatActivity {
             txt_bayar.setError("Karakter terlalu pendek!");
             focusView = txt_bayar;
             cancel = true;
-        }else if (minimal_bayar>Integer.parseInt(bayar)){
-            txt_bayar.setError("Pembayaran minimal "+String.valueOf(minimal_bayar));
+        }else if (minimal_bayar!=Integer.parseInt(bayar)){
+            txt_bayar.setError("Pembayaran harus "+helper.formatNumber(minimal_bayar));
             focusView = txt_bayar;
             cancel = true;
         } else if(TextUtils.isEmpty(angsuran)){

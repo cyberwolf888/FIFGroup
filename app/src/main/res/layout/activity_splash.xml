@@ -28,6 +28,6 @@
         android:gravity="center_horizontal"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="30dp"
-        android:text="@string/nama" />
+        android:text="FIF Group" />
 
 </LinearLayout>
